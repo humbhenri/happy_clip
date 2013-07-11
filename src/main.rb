@@ -6,7 +6,9 @@ class Main
     def initialize
         @clip = ClipboardManager.new
         @clip.add_observer self
-        @ui = Ui.new(@clip.data, exit_cb = proc { @clip.save_data; @ui.exit })
+        exit_cb = proc { @clip.save_data; @ui.exit }
+        selected_cb = proc { @clip.put @ui.selected }
+        @ui = Ui.new(@clip.data, exit_cb, selected_cb)
         @ui.start
     end
 

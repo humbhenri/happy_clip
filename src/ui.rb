@@ -2,7 +2,7 @@ require "tk"
 
 class Ui
 
-    def initialize(data_list, exit_cb = nil)
+    def initialize(data_list, exit_cb = nil, selection_cb = nil)
         @oddrow = false
 
         # main window setup
@@ -22,12 +22,20 @@ class Ui
         end
         @tree.tag_configure("oddrow", :background => "#f0f0ff")
 
+        # list selection callback setup
+        @tree.bind("Double-ButtonPress-1", selection_cb) unless selection_cb.nil?
+
         # scrollbar
         @tree.yscrollbar(TkScrollbar.new(@root).pack('side'=>'right', 'fill'=>'y'))
     end
 
     def start
         Tk.mainloop
+    end
+
+    def selected
+        selection = @tree.selection
+        @tree.itemcget(selection, "text")
     end
 
     def update_data(data)
