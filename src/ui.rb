@@ -13,7 +13,11 @@ class Ui
         end
 
         # data list configuration
-        @tree = Tk::Tile::Treeview.new @root do
+        frame_top = Tk::Tile::Frame.new @root do
+            padding "0 0 0 0"
+            pack("side" => "top", "fill" => "both", "expand" => 1)
+        end
+        @tree = Tk::Tile::Treeview.new frame_top do
             pack("side" => "left", "fill" => "both", "expand" => 1)
             show("tree") # hide column headings
         end
@@ -25,8 +29,24 @@ class Ui
         # list selection callback setup
         @tree.bind("Double-ButtonPress-1", selection_cb) unless selection_cb.nil?
 
-        # scrollbar
-        @tree.yscrollbar(TkScrollbar.new(@root).pack('side'=>'right', 'fill'=>'y'))
+        # list scrollbar
+        @tree.yscrollbar(TkScrollbar.new(frame_top).pack("side" => "right", "fill" => "y"))
+
+        # search bar
+        frame_bottom = Tk::Tile::Frame.new @root do
+            padding "0 0 0 0"
+            pack("side" => "bottom", "fill" => "x")
+        end
+        search_btn = Tk::Tile::Button.new frame_bottom do
+            image(TkPhotoImage.new("file"=>"../res/search.GIF"))
+            pack("side" => "left")
+        end
+        search_btn.command { search }
+        @search_txt = Tk::Tile::Entry.new(frame_bottom) do
+            pack("side" => "right", "fill" => "x", "expand" => 1)
+        end
+        @search_txt.bind("Return", proc { search })
+
     end
 
     def start
@@ -40,10 +60,20 @@ class Ui
 
     def update_data(data)
         @tree.insert("", 0, :text => data, :tags => [@oddrow ? "oddrow" : ""])
-        @oddrow = !@oddrow
+        @oddrow = !@oddrow # keep alternated colors
     end
 
     def exit
         @root.destroy
+    end
+
+    def search
+        search_item = @search_txt.get
+        @tree.children("").reverse.each do | item |
+            if  @tree.itemcget(item, "text").match /#{search_item}/
+                @tree.selection_set item
+                @tree.see item
+            end
+        end
     end
 end
