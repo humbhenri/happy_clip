@@ -1,3 +1,8 @@
 Happy Clip
 ----------
-A cross platform clipboard manager made in Ruby
+A clipboard manager made in Ruby/Tk for Windows.
+
+Dependencies
+------------
+gem install clipboard
+gem install auto_click
