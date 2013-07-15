@@ -1,4 +1,5 @@
 require "tk"
+require "auto_click"
 
 class Ui
 
@@ -75,5 +76,22 @@ class Ui
                 @tree.see item
             end
         end
+    end
+
+    def paste_on_next_window
+        alt_tab
+        key_down('ctrl')
+        key_stroke('v')
+        key_up('ctrl')
+    end
+
+    def minimize_window
+        @root.iconify
+    end
+
+    def alt_tab
+        key_down('alt')
+        key_stroke('tab')
+        key_up('alt')
     end
 end
