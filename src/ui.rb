@@ -39,7 +39,8 @@ class Ui
             pack("side" => "bottom", "fill" => "x")
         end
         search_btn = Tk::Tile::Button.new frame_bottom do
-            image(TkPhotoImage.new("file"=>"../res/search.GIF"))
+            dir = File.dirname(__FILE__)
+            image(TkPhotoImage.new("file"=> File.join(dir, "search.GIF")))
             pack("side" => "left")
         end
         search_btn.command { search }
